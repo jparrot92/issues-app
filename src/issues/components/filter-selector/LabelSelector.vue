@@ -8,10 +8,10 @@ const { labelsQuery } = useLabels()
 
 <template>
     <div class="q-mt-md">
-        <LoaderSpinner size="50px" :thickness="1" :show-test="false"/>
+        <LoaderSpinner v-if="labelsQuery.isLoading.value" size="50px" :thickness="1" :show-test="false"/>
 
-        <q-chip v-for="label of 10" :key="label" color="primary" outline clickable>
-            Algun nombre
+        <q-chip v-else v-for="label of labelsQuery.data.value" :key="label.id" :style="{color: `#${label.color}`}" outline clickable>
+            {{ label.name }}
         </q-chip>
     </div>
 </template>
