@@ -1,9 +1,18 @@
+import { storeToRefs } from 'pinia';
 import { useQuery } from '@tanstack/vue-query';
+
+import { useIssuesStore } from 'src/stores/issues';
 import { Issue, State } from '../models/issue';
 import { githubApi } from '../../api/githubApi';
 
-const getIssues = async (): Promise<Issue[]> => {
+const getIssues = async (labels: string[], state: State): Promise<Issue[]> => {
     const params = new URLSearchParams();
+
+    if (state) params.append('state', state);
+    if (labels.length > 0) {
+        const labelsString = labels.join(',');
+        params.append('labels', labelsString);
+    }
 
     params.append('per_page', '10');
 
@@ -15,7 +24,12 @@ const getIssues = async (): Promise<Issue[]> => {
 };
 
 const useIssues = () => {
-    const issuesQuery = useQuery(['issues'], getIssues);
+    const issuesStore = useIssuesStore();
+    const { labels, state } = storeToRefs(issuesStore);
+
+    const issuesQuery = useQuery(['issues', { labels, state }], () =>
+        getIssues(labels.value, state.value)
+    );
 
     return { issuesQuery };
 };
