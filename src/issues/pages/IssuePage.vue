@@ -11,7 +11,7 @@ const { issueQuery, issueCommentsQuery } = useIssue(+id);
 </script>
 
 <template>
-    <route-link class="text-white" to="/">Go Back</route-link>
+    <router-link class="text-white" to="/">Go Back</router-link>
 
     <!-- Header -->
     <LoaderSpinner
