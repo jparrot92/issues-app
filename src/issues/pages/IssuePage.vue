@@ -7,7 +7,7 @@ import useIssue from '../composables/useIssue';
 const route = useRoute();
 const { id } = route.params;
 
-const { issueQuery } = useIssue(+id);
+const { issueQuery, issueCommentsQuery } = useIssue(+id);
 </script>
 
 <template>
@@ -28,11 +28,22 @@ const { issueQuery } = useIssue(+id);
     <p v-else>Issue with ID {{ id }} not found</p>
 
     <!-- Comentarios -->
-    <LoaderSpinner :thickness="1" size="1.5rem" :show-test="false" />
+    <LoaderSpinner
+        v-if="issueCommentsQuery.isLoading.value"
+        :thickness="1"
+        size="1.5rem"
+        :show-test="false"
+    />
 
-    <div class="column">
-        <span class="text-h3 q-mb-md">Comments (5)</span>
-        <!-- <IssueCard v-for="comment of 5" :key="comment" />-->
+    <div v-else-if="issueCommentsQuery.data.value" class="column">
+        <span class="text-h3 q-mb-md">
+            Comments ({{ issueCommentsQuery.data.value.length }})
+        </span>
+        <IssueCard
+            v-for="comment of issueCommentsQuery.data.value"
+            :key="comment.id"
+            :issue="comment"
+        />
     </div>
 </template>
 
