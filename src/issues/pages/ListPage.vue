@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+
 import LoaderSpinner from 'src/shared/components/LoaderSpinner.vue';
 import FilterSelector from 'src/issues/components/filter-selector/FilterSelector.vue';
 import IssueList from 'src/issues/components/issue-list/IssueList.vue';
-
-import FloatingButtons from '../components/FloatingButtons.vue';
+import FloatingButtons from 'src/issues/components/FloatingButtons.vue';
+import NewIssueDialog from 'src/issues/components/NewIssueDialog.vue';
 
 import useIssues from '../composables/useIssues';
 
@@ -43,12 +45,6 @@ const listPageClickTemp2 = () => {
     <FloatingButtons
         :buttons="[
             {
-                icon: 'navigation',
-                color: 'secondary',
-                size: 'sm',
-                action: listPageClickTemp2
-            },
-            {
                 icon: 'add',
                 color: 'primary',
                 size: 'lg',
@@ -56,6 +52,9 @@ const listPageClickTemp2 = () => {
             }
         ]"
     />
+
+    <!-- Dialogo de New Issue -->
+    <NewIssueDialog />
 </template>
 
 <style scoped></style>
