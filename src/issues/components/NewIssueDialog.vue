@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import MdEditor from 'md-editor-v3';
+import 'md-editor-v3/lib/style.css';
 
 const isOpen = ref<boolean>(true);
 
@@ -33,7 +35,6 @@ const labels = ref<string[]>([]);
                                 label="Title"
                                 placeholder="Title"
                                 class="q-mb-sm"
-                                :rules="[(val) => !!val || 'Field is required']"
                             />
 
                             <q-select
@@ -49,6 +50,11 @@ const labels = ref<string[]>([]);
                             />
 
                             <!-- TODO: Markdown editor -->
+                            <md-editor
+                                v-model="body"
+                                placeholder="# Markdown"
+                                language="en-US"
+                            />
                         </div>
                     </q-card-section>
 
