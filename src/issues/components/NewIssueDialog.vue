@@ -2,6 +2,7 @@
 import { ref, watch } from 'vue';
 import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
+import useIssueMutation from '../composables/useIssueMutation';
 
 interface Props {
     isOpen: boolean;
@@ -13,6 +14,8 @@ interface Emits {
 
 const props = defineProps<Props>();
 const emits = defineEmits<Emits>();
+
+const { issueMutation } = useIssueMutation();
 
 const isOpen = ref<boolean>(false);
 
@@ -29,7 +32,7 @@ watch(props, () => {
     <div class="q-pa-md q-gutter-sm">
         <q-dialog v-model="isOpen" position="bottom" persistent>
             <q-card style="width: 500px">
-                <q-form>
+                <q-form @submit="issueMutation.mutate({ title, body, labels })">
                     <q-linear-progress :value="1" color="primary" />
 
                     <q-card-section class="column no-wrap">
@@ -50,6 +53,7 @@ watch(props, () => {
                                 label="Title"
                                 placeholder="Title"
                                 class="q-mb-sm"
+                                :rules="[(val) => !!val || 'Field is required']"
                             />
 
                             <q-select
@@ -75,6 +79,7 @@ watch(props, () => {
 
                     <q-card-actions align="left">
                         <q-btn
+                            :disable="issueMutation.isLoading.value"
                             @click="emits('onClose')"
                             flat
                             label="Cancel"
@@ -83,6 +88,7 @@ watch(props, () => {
                         />
                         <q-space />
                         <q-btn
+                            :disable="issueMutation.isLoading.value"
                             type="submit"
                             flat
                             label="Add Issue"
