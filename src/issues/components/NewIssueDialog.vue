@@ -1,13 +1,28 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import MdEditor from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 
-const isOpen = ref<boolean>(true);
+interface Props {
+    isOpen: boolean;
+    labels: string[];
+}
+interface Emits {
+    (e: 'onClose'): void;
+}
+
+const props = defineProps<Props>();
+const emits = defineEmits<Emits>();
+
+const isOpen = ref<boolean>(false);
 
 const title = ref<string>('');
 const body = ref<string>('');
 const labels = ref<string[]>([]);
+
+watch(props, () => {
+    isOpen.value = props.isOpen;
+});
 </script>
 
 <template>
@@ -42,7 +57,7 @@ const labels = ref<string[]>([]);
                                 filled
                                 v-model="labels"
                                 multiple
-                                :options="[]"
+                                :options="props.labels"
                                 use-chips
                                 stack-label
                                 label="Multiple selecction"
@@ -59,7 +74,13 @@ const labels = ref<string[]>([]);
                     </q-card-section>
 
                     <q-card-actions align="left">
-                        <q-btn flat label="Cancel" v-close-popup color="dark" />
+                        <q-btn
+                            @click="emits('onClose')"
+                            flat
+                            label="Cancel"
+                            v-close-popup
+                            color="dark"
+                        />
                         <q-space />
                         <q-btn
                             type="submit"

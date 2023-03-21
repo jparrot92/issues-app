@@ -8,15 +8,15 @@ import FloatingButtons from 'src/issues/components/FloatingButtons.vue';
 import NewIssueDialog from 'src/issues/components/NewIssueDialog.vue';
 
 import useIssues from '../composables/useIssues';
+import useLabels from '../composables/useLabel';
 
 const { issuesQuery } = useIssues();
+const { labelsQuery } = useLabels();
 
-const listPageClickTemp1 = () => {
-    console.log('listPageClickTemp 1');
-};
+const isOpen = ref<boolean>(false);
 
-const listPageClickTemp2 = () => {
-    console.log('listPageClickTemp 2');
+const openDialog = () => {
+    isOpen.value = true;
 };
 </script>
 
@@ -48,13 +48,18 @@ const listPageClickTemp2 = () => {
                 icon: 'add',
                 color: 'primary',
                 size: 'lg',
-                action: listPageClickTemp1
+                action: openDialog
             }
         ]"
     />
 
     <!-- Dialogo de New Issue -->
-    <NewIssueDialog />
+    <NewIssueDialog
+        :is-open="isOpen"
+        v-if="labelsQuery.data"
+        :labels="labelsQuery.data.value?.map((label) => label.name) || []"
+        @on-close="isOpen = false"
+    />
 </template>
 
 <style scoped></style>
