@@ -26,6 +26,19 @@ const labels = ref<string[]>([]);
 watch(props, () => {
     isOpen.value = props.isOpen;
 });
+
+watch(
+    () => issueMutation.isSuccess.value,
+    (isSuccess) => {
+        if (isSuccess) {
+            title.value = '';
+            body.value = '';
+            labels.value = [];
+            issueMutation.reset();
+            emits('onClose');
+        }
+    }
+);
 </script>
 
 <template>
